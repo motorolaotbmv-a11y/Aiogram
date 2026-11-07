@@ -1,0 +1,32 @@
+name: Aiogram APK Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Скачать исходники
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Установить Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Собрать APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleAfatRelease
+
+      - name: Сохранить APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Aiogram-APK
+          path: |
+            **/build/outputs/apk/**/*.apk
